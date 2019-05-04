@@ -6,12 +6,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WexinApplication
+public class WeChatApplication
 {
-    private static Logger log = LoggerFactory.getLogger(WexinApplication.class);
+    private static Logger log = LoggerFactory.getLogger(WeChatApplication.class);
     public static void main(String[] args)
     {
-        SpringApplication.run(WexinApplication.class, args);
+        SpringApplication.run(WeChatApplication.class, args);
         log.info("[WeChat]Server starting...");
     }
 }
