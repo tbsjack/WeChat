@@ -1,0 +1,140 @@
+package com.ourhome.as.util;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+import com.ourhome.constant.Constant;
+
+import net.sf.json.JSONObject;
+
+public class UpLoadUtil
+{
+    private static final String UPLOAD_URL = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
+    
+    /**
+     * 
+     * @Title: upload 
+     * @Description: TODO 通过HTTPS上传文件到微信服务器获取id 
+     * @param @param filePath
+     * @param @param accessToken
+     * @param @param type
+     * @param @return
+     * @param @throws IOException 
+     * @return String 
+     * @throws
+     */
+    public static String upload(String filePath,String accessToken,String type) throws IOException
+    {
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile())
+        {
+            throw new IOException("文件不存在");
+        }
+        String url = UPLOAD_URL.replace(Constant.ACCESS_TOKEN, accessToken).replace(Constant.UPCAUSE_TYPE, type);
+        String result = "";
+        result = doConPost(file, url);
+//        result = HttpClientUtil.upload(url, filePath, file.getName());
+        JSONObject jsonObj = JSONObject.fromObject(result);
+        String typeName = "media_id";
+        if ("thumb".equals(type))
+        {
+            typeName = type + "_media_id";
+        }
+        String mediaId = jsonObj.getString(typeName);
+        return mediaId;
+    }
+
+    private static String doConPost(File file, String url) throws MalformedURLException, IOException, ProtocolException,
+            UnsupportedEncodingException, FileNotFoundException
+    {
+        URL urlObj = new URL(url);
+        // 连接
+        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+
+        con.setRequestMethod("POST");
+        con.setDoInput(true);
+        con.setDoOutput(true);
+        con.setUseCaches(false);
+
+        // 设置请求头信息
+        con.setRequestProperty("Connection", "Keep-Alive");
+        con.setRequestProperty("Charset", "UTF-8");
+
+        // 设置边界
+        String BOUNDARY = "----------" + System.currentTimeMillis();
+        con.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("--");
+        sb.append(BOUNDARY);
+        sb.append("\r\n");
+        sb.append("Content-Disposition: form-data;name=\"file\";filename=\"" + file.getName() + "\"\r\n");
+        sb.append("Content-Type:application/octet-stream\r\n\r\n");
+
+        byte[] head = sb.toString().getBytes("utf-8");
+
+        // 获得输出流
+        OutputStream out = new DataOutputStream(con.getOutputStream());
+        // 输出表头
+        out.write(head);
+
+        // 文件正文部分
+        // 把文件已流文件的方式 推入到url中
+        DataInputStream in = new DataInputStream(new FileInputStream(file));
+        int bytes = 0;
+        byte[] bufferOut = new byte[1024];
+        while ((bytes = in.read(bufferOut)) != -1)
+        {
+            out.write(bufferOut, 0, bytes);
+        }
+        in.close();
+
+        // 结尾部分
+        byte[] foot = ("\r\n--" + BOUNDARY + "--\r\n").getBytes("utf-8");// 定义最后数据分隔线
+
+        out.write(foot);
+
+        out.flush();
+        out.close();
+
+        StringBuffer buffer = new StringBuffer();
+        BufferedReader reader = null;
+        String result = null;
+        try
+        {
+            // 定义BufferedReader输入流来读取URL的响应
+            reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                buffer.append(line);
+            }
+            if (result == null)
+            {
+                result = buffer.toString();
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } finally
+        {
+            if (reader != null)
+            {
+                reader.close();
+            }
+        }
+        return result;
+    }
+}
