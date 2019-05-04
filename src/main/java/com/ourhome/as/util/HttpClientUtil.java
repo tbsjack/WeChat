@@ -3,6 +3,7 @@ package com.ourhome.as.util;
 import java.io.File;
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -17,11 +18,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class HttpClientUtil
 {
-    
-    private static final Logger log = LoggerFactory.getLogger(HttpClientUtil.class);
     /**
      * 
      * @Title: upload 

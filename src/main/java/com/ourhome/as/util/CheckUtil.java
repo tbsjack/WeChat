@@ -2,15 +2,16 @@ package com.ourhome.as.util;
 
 import java.util.Arrays;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 @Component
+@Slf4j
 public class CheckUtil 
 {
-	private static Logger log = LoggerFactory.getLogger(CheckUtil.class);
 	/**
 	 * 通信密文
 	 */

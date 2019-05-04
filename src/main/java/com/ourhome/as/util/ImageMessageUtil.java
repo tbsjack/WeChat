@@ -3,6 +3,7 @@ package com.ourhome.as.util;
 import java.io.IOException;
 import java.util.Date;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +11,9 @@ import com.ourhome.bean.Image;
 import com.ourhome.bean.ImageMessage;
 import com.ourhome.constant.Constant;
 import com.thoughtworks.xstream.XStream;
-
+@Slf4j
 public class ImageMessageUtil implements BaseMessageUtil<ImageMessage>
 {
-    private static Logger log = LoggerFactory.getLogger(ImageMessageUtil.class);
     @Override
     public String messageToxml(ImageMessage imageMessage)
     {

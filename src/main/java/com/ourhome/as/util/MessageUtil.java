@@ -8,16 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class MessageUtil {
-	private static Logger log = LoggerFactory.getLogger(MessageUtil.class);
-	
 	@SuppressWarnings("unchecked")
 	public static Map<String,String> xml2Map(HttpServletRequest request)
 	{

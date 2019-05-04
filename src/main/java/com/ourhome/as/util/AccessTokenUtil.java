@@ -3,6 +3,7 @@ package com.ourhome.as.util;
 
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -19,10 +20,8 @@ import com.ourhome.bean.AccessToken;
 import com.ourhome.constant.Constant;
 
 import net.sf.json.JSONObject;
-
+@Slf4j
 public class AccessTokenUtil {
-
-    private static Logger log = LoggerFactory.getLogger(AccessTokenUtil.class);
     private static final String APP_ID = "wxe015114188171b9e";
     private static final String APPSECRET = "31ef02c2cb1d701a1532f239f55b8c03";
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
